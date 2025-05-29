@@ -1,0 +1,169 @@
+[gd_scene load_steps=20 format=3 uid="uid://db1mf8f7esd56"]
+
+[ext_resource type="Script" uid="uid://bxd5q0rosj7rl" path="res://map_generation/map_generator.gd" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://d0k1rsgxdethl" path="res://map_generation/asset_utilities.gd" id="2_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://cthvft6kblfb0" path="res://structures/castle.obj" id="2_4c57u"]
+[ext_resource type="Script" uid="uid://di6mbvs5jw2k6" path="res://pathfinder.gd" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://ewo3umg2qxx4" path="res://foliage/Foliage_Resources/tree4.tscn" id="3_kek77"]
+[ext_resource type="Script" uid="uid://do4pu80o22uvc" path="res://game_managers/CustomTileData.gd" id="3_yaehf"]
+[ext_resource type="Script" uid="uid://g5s0fy6dae4k" path="res://camera_3d.gd" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://d3pvcc8vx7t6f" path="res://foliage/Foliage_Resources/tree1.tscn" id="4_5vw27"]
+[ext_resource type="Script" uid="uid://dj78ufrq635kt" path="res://structures/structure_data.gd" id="4_074og"]
+[ext_resource type="PackedScene" uid="uid://ccu5hcxr2in2l" path="res://foliage/Foliage_Resources/tree2.tscn" id="5_272bh"]
+[ext_resource type="Script" uid="uid://0ej5gwssntv0" path="res://map_generation/map_data_manager.gd" id="5_cegan"]
+[ext_resource type="PackedScene" uid="uid://dedfm2uhrlyh1" path="res://foliage/Foliage_Resources/large_rock.tscn" id="6_4c57u"]
+[ext_resource type="Script" uid="uid://cfveqaytdk4my" path="res://map_generation/terrain_shaper.gd" id="6_82xsv"]
+[ext_resource type="PackedScene" uid="uid://uq1xx11s26rc" path="res://foliage/Foliage_Resources/tree3.tscn" id="6_kek77"]
+[ext_resource type="PackedScene" uid="uid://ngrfs31elnoj" path="res://foliage/Foliage_Resources/stone1.tscn" id="7_efxa6"]
+[ext_resource type="Script" uid="uid://bd80m4mh8023s" path="res://structures/structure_placer.gd" id="11_efxa6"]
+
+[sub_resource type="Shader" id="Shader_4c57u"]
+code = "shader_type spatial;
+render_mode cull_disabled, blend_add, unshaded;
+uniform float time_speed = 1.0;
+//time specifically for the wave noise texture
+uniform float surface_speed = 1.0;
+uniform float spin = 0.0; //Twisting motion of the water
+uniform float brightness = 0.6;
+uniform float color_intensity = 0.0;
+//Tiling frequency of the noise accross the mesh
+uniform float horizontal_frequency = 2.0;
+uniform float vertical_frequency = 2.0;
+//overall size muliplier
+uniform float size = 3.0;
+//affects total size
+uniform float banding_bias = 0.6;
+
+uniform sampler2D wave_texture;
+uniform sampler2D noise_texture;
+//wave height, use for ocean waves
+uniform float wave_height = 0.5;
+//water surface height variation based on the noise texture
+uniform float texture_height = 0.5;
+//preset band colors
+uniform vec4 color1 : source_color = vec4(0.59, 0.761, 1.0, 1.0);
+uniform vec4 color2 : source_color = vec4(0.274, 0.474, 0.98, 1.0);
+uniform vec4 color3 : source_color = vec4(0.059, 0.389, 0.85, 1.0);
+uniform vec4 color4 : source_color = vec4(0.0, 0.267, 1.0, 1.0);
+
+void vertex() {
+	float time = -TIME * time_speed;
+	VERTEX += NORMAL * wave_height * texture(wave_texture, vec2(UV.x + time * surface_speed, UV.y + time * surface_speed)).r;
+	VERTEX += NORMAL * texture_height * texture(noise_texture,vec2(UV.x * horizontal_frequency + spin * (time /2.0), (UV.y * vertical_frequency) + time)).r;;
+}
+
+void fragment() {
+	float time = -TIME * time_speed;
+
+// Calculate dot product of normals and combine with noise texture value
+	float normal_facing = dot(NORMAL, VIEW);
+	float noise_value = texture(noise_texture,vec2(UV.x * horizontal_frequency + spin * (time /2.0), (UV.y * vertical_frequency) + time)).r;
+	normal_facing += (noise_value -0.5 + size) * 0.3;
+
+	float band = normal_facing * 3.0 * banding_bias;
+	vec4 band_color = vec4(0,0,0,0);
+	if (band <= 1.5) {
+		discard;
+	}
+	else if(band <= 2.0){
+		band_color = mix(color1, color2, -0.01 / (band-2.01)); //Mixes the color bands to make a slight gradient
+	}
+	else if (band <= 2.5) {
+		band_color = mix(color2, color3, -0.01 / (band-2.51));
+	}
+	else if (band <= 2.9) {
+		band_color = mix(color3, color4, -0.01 / (band-2.91));
+	}
+	else if (band >= 0.0) {
+		band_color = color4;
+	}
+	//Final color adjestment
+	ALBEDO = clamp(brightness * (vec3(1.0, 1.0, 1.0) - (band_color.xyz * -color_intensity)) * band_color.xyz, vec3(0.0, 0.0, 0.0), vec3(brightness, brightness, brightness));
+}
+"
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 1
+background_color = Color(0.456085, 0.761357, 0.909605, 1)
+ambient_light_color = Color(0.463839, 0.635311, 1, 1)
+glow_enabled = true
+volumetric_fog_albedo = Color(0.654854, 0.932319, 0.976356, 1)
+volumetric_fog_emission = Color(0.58657, 0.806807, 0.9218, 1)
+
+[sub_resource type="GDScript" id="GDScript_2cqfq"]
+
+[node name="Main" type="Node3D"]
+
+[node name="MapGenerator" type="Node3D" parent="." groups=["map_generator"]]
+script = ExtResource("1_0xm2m")
+asset_utilities_script = ExtResource("2_2cqfq")
+custom_tile_data_script = ExtResource("3_yaehf")
+structure_data_script = ExtResource("4_074og")
+map_data_manager_script = ExtResource("5_cegan")
+terrain_shaper_script = ExtResource("6_82xsv")
+map_width = 250
+map_depth = 250
+rock_cluster_noise_scale = 0.155
+land_transition_passes = 0
+land_transition_step_factor = 0.7
+shoreline_width = 1
+beach_slope_noise_strength = 0.7
+flat_water_visual_norm_height = 0.28
+grass_tile_flower_chance = 0.01
+plains_tree_scene_variants = Array[PackedScene]([ExtResource("3_kek77")])
+grass_tile_plains_tree_chance = 0.002
+tree_scene_variants = Array[PackedScene]([ExtResource("4_5vw27"), ExtResource("5_272bh"), ExtResource("6_kek77")])
+forest_tile_tree_chance = 0.1
+large_rock_cluster_scene_variants = Array[PackedScene]([ExtResource("6_4c57u"), ExtResource("7_efxa6")])
+rock_cluster_threshold = 0.5
+castle_1_scene = ExtResource("2_4c57u")
+castle_2_scene = ExtResource("2_4c57u")
+castle_tile_radius = 4
+castle_flatten_radius_tiles = 25
+castle_prop_removal_radius_tiles = 8
+castle_flatten_strength = 1.0
+use_custom_water_shader = false
+water_shader_override = SubResource("Shader_4c57u")
+water_time_speed = 0.2
+water_surface_speed = 0.2
+water_spin = 0.01
+water_brightness = 0.1
+water_color_intensity = -0.85
+water_horizontal_frequency = 0.5
+water_vertical_frequency = 0.5
+water_size_param = 0.5
+water_banding_bias = 0.1
+water_wave_height = 0.005
+water_texture_height = 0.0
+
+[node name="Tiles" type="Node3D" parent="MapGenerator"]
+
+[node name="Foliage" type="Node3D" parent="MapGenerator"]
+
+[node name="Props" type="Node3D" parent="MapGenerator"]
+
+[node name="Castles" type="Node3D" parent="MapGenerator"]
+
+[node name="Structures" type="Node3D" parent="MapGenerator"]
+
+[node name="Pathfinder" type="Node" parent="."]
+script = ExtResource("3_h2yge")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("4_1bvp3")
+move_speed = 2.79
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.993007, 0.118057, 0, -0.118057, 0.993007, 0, 3.67148, 0)
+light_energy = 1.545
+
+[node name="StructurePlacerNode" type="Node3D" parent="." node_paths=PackedStringArray("map_generator")]
+script = ExtResource("11_efxa6")
+map_generator = NodePath("../MapGenerator")
+hotbar_structure_ids = Array[StringName]([&"wood", &"stone"])
+
+[node name="TestSpawn" type="Node" parent="."]
+script = SubResource("GDScript_2cqfq")

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ewo3umg2qxx4"]
+
+[ext_resource type="PackedScene" uid="uid://dvxw2186h8kwd" path="res://foliage/BeesAndTrees-14.obj" id="1_5uorn"]
+
+[node name="BeesAndTrees-14" instance=ExtResource("1_5uorn")]
+
+[node name="Mesh" parent="." index="0"]
+transform = Transform3D(0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0.13893, -0.0120172)

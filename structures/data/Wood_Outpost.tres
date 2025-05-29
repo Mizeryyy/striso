@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="StructureData" load_steps=3 format=3 uid="uid://k70kpcbblmch"]
+
+[ext_resource type="PackedScene" uid="uid://38srbqn2178d" path="res://structures/wood.obj" id="1_20j5f"]
+[ext_resource type="Script" uid="uid://dj78ufrq635kt" path="res://structures/structure_data.gd" id="1_55563"]
+
+[resource]
+script = ExtResource("1_55563")
+id = &"wood"
+display_name = "Structure"
+model_p1 = ExtResource("1_20j5f")
+model_p2 = ExtResource("1_20j5f")
+model_tile_radius = 2
+footprint_size_tiles = Vector2i(4, 4)
+footprint_offset_tiles = Vector2i(0, 0)
+flatten_radius_tiles = 5
+flatten_strength = 1.0
+prop_removal_radius_tiles = 5
+allowed_tile_types = Array[String](["grass", "forest_grass"])
+disallowed_tile_types = Array[String](["water", "mountain"])
+min_dist_from_water_tiles = 1
+min_dist_from_mountain_tiles = 1
+produces_resource = &"wood"
+production_rate = 5.0
+production_interval = 10.0
+metadata/_custom_type_script = "uid://dj78ufrq635kt"

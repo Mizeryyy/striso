@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="StructureData" load_steps=3 format=3 uid="uid://clghldgmd5avb"]
+
+[ext_resource type="Script" uid="uid://dj78ufrq635kt" path="res://structures/structure_data.gd" id="1_trxg8"]
+[ext_resource type="PackedScene" uid="uid://buq8pldfr40r5" path="res://structures/stone.obj" id="1_ue3h7"]
+
+[resource]
+script = ExtResource("1_trxg8")
+id = &"stone"
+display_name = "Stone Refinery"
+model_p1 = ExtResource("1_ue3h7")
+model_p2 = ExtResource("1_ue3h7")
+model_tile_radius = 2
+footprint_size_tiles = Vector2i(4, 4)
+footprint_offset_tiles = Vector2i(0, 0)
+flatten_radius_tiles = 5
+flatten_strength = 1.0
+prop_removal_radius_tiles = 5
+allowed_tile_types = Array[String](["grass", "mountain"])
+disallowed_tile_types = Array[String](["water", "forest"])
+min_dist_from_water_tiles = 2
+min_dist_from_mountain_tiles = 1
+produces_resource = &"stone"
+production_rate = 5.0
+production_interval = 10.0
+metadata/_custom_type_script = "uid://dj78ufrq635kt"

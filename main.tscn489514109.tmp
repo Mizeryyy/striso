@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://db1mf8f7esd56"]
+
+[ext_resource type="Script" uid="uid://bxd5q0rosj7rl" path="res://map_generator.gd" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://do4pu80o22uvc" path="res://tiles.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://di6mbvs5jw2k6" path="res://pathfinder.gd" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://g5s0fy6dae4k" path="res://camera_3d.gd" id="4_1bvp3"]
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+
+[node name="Main" type="Node3D"]
+
+[node name="MapGenerator" type="Node3D" parent="."]
+script = ExtResource("1_0xm2m")
+seed = null
+map_width = null
+map_depth = null
+noise_scale = null
+moisture_noise_scale = null
+water_threshold_norm = null
+mountain_threshold_norm = null
+forest_moisture_threshold_norm = null
+
+[node name="Tiles" type="Node3D" parent="MapGenerator"]
+script = ExtResource("1_ig7tw")
+
+[node name="Pathfinder" type="Node" parent="."]
+script = ExtResource("3_h2yge")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("4_1bvp3")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

@@ -1,0 +1,2 @@
+# striso
+game
