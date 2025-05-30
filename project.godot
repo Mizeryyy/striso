@@ -16,8 +16,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-UnitFactory="*res://game_managers/unit_factory.gd"
-unit_base="*res://units/unit_base.gd"
+AssetUtils="*res://map_generation/asset_utilities.gd"
 
 [editor]
 

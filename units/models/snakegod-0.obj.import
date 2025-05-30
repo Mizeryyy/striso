@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dek863lu55brw"
-path="res://.godot/imported/sword.obj-16405ce6da9df9447c658dff746c2ffc.scn"
+uid="uid://hmkinfnvrgcw"
+path="res://.godot/imported/snakegod-0.obj-2a54766a93f8498e91da01d8d590dfcb.scn"
 
 [deps]
 
-source_file="res://units/models/sword.obj"
-dest_files=["res://.godot/imported/sword.obj-16405ce6da9df9447c658dff746c2ffc.scn"]
+source_file="res://units/models/snakegod-0.obj"
+dest_files=["res://.godot/imported/snakegod-0.obj-2a54766a93f8498e91da01d8d590dfcb.scn"]
 
 [params]
 

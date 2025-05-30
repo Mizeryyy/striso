@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwat3f7smq6ha"]
+
+[ext_resource type="Script" uid="uid://b76qeun3qxbvj" path="res://Unit.gd" id="1_muv2h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a2g4q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pyybm"]
+
+[node name="Character" type="CharacterBody3D"]
+script = ExtResource("1_muv2h")
+
+[node name="MeshRoot" type="Node3D" parent="."]
+
+[node name="ModelPlaceholder" type="MeshInstance3D" parent="MeshRoot"]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_a2g4q")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+
+[node name="InteractionCollisionShape" type="CollisionShape3D" parent="InteractionArea"]
+shape = SubResource("BoxShape3D_pyybm")

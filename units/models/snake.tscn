@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cc54ad1ymqk2k"]
+
+[ext_resource type="PackedScene" uid="uid://hmkinfnvrgcw" path="res://units/models/snakegod-0.obj" id="1_i383o"]
+
+[node name="snakegod-0" instance=ExtResource("1_i383o")]
+
+[node name="Mesh" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.10564, 0, 0.113552)

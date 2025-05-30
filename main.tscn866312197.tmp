@@ -1,7 +1,6 @@
-[gd_scene load_steps=23 format=3 uid="uid://db1mf8f7esd56"]
+[gd_scene load_steps=20 format=3 uid="uid://db1mf8f7esd56"]
 
 [ext_resource type="Script" uid="uid://bxd5q0rosj7rl" path="res://map_generation/map_generator.gd" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://isggsl7mva8r" path="res://main.gd" id="1_cegan"]
 [ext_resource type="Script" uid="uid://d0k1rsgxdethl" path="res://map_generation/asset_utilities.gd" id="2_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://cthvft6kblfb0" path="res://structures/castle.obj" id="2_4c57u"]
 [ext_resource type="Script" uid="uid://di6mbvs5jw2k6" path="res://pathfinder.gd" id="3_h2yge"]
@@ -18,8 +17,6 @@
 [ext_resource type="PackedScene" uid="uid://ngrfs31elnoj" path="res://foliage/Foliage_Resources/stone1.tscn" id="7_efxa6"]
 [ext_resource type="Script" uid="uid://bd80m4mh8023s" path="res://structures/structure_placer.gd" id="11_efxa6"]
 [ext_resource type="PackedScene" uid="uid://dwat3f7smq6ha" path="res://units/Unit.tscn" id="17_yaehf"]
-[ext_resource type="Resource" uid="uid://bd2051j34bmsm" path="res://units/data/Soldier.tres" id="18_074og"]
-[ext_resource type="Script" uid="uid://bptdil5fajo45" path="res://HighlighterManager.gd" id="20_82xsv"]
 
 [sub_resource type="Shader" id="Shader_4c57u"]
 code = "shader_type spatial;
@@ -95,7 +92,6 @@ volumetric_fog_albedo = Color(0.654854, 0.932319, 0.976356, 1)
 volumetric_fog_emission = Color(0.58657, 0.806807, 0.9218, 1)
 
 [node name="Main" type="Node3D"]
-script = ExtResource("1_cegan")
 
 [node name="MapGenerator" type="Node3D" parent="." groups=["map_generator"]]
 script = ExtResource("1_0xm2m")
@@ -168,10 +164,4 @@ script = ExtResource("11_efxa6")
 map_generator = NodePath("../MapGenerator")
 hotbar_structure_ids = Array[StringName]([&"wood", &"stone"])
 
-[node name="UnitsContainer" type="Node3D" parent="."]
-
-[node name="Unit" parent="." instance=ExtResource("17_yaehf")]
-unit_data_resource = ExtResource("18_074og")
-
-[node name="Node" type="Node" parent="."]
-script = ExtResource("20_82xsv")
+[node name="Character" parent="." instance=ExtResource("17_yaehf")]

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="UnitData" load_steps=4 format=3 uid="uid://bd2051j34bmsm"]
+
+[ext_resource type="Script" uid="uid://c6fuw45jayptp" path="res://units/unit_data.gd" id="1_8ysk3"]
+[ext_resource type="Texture2D" uid="uid://dy41f5xp84k3l" path="res://icon.svg" id="1_erp23"]
+[ext_resource type="PackedScene" uid="uid://cc54ad1ymqk2k" path="res://units/models/snake.tscn" id="2_erp23"]
+
+[resource]
+script = ExtResource("1_8ysk3")
+unit_id = &"soldier"
+unit_name = "Soldier"
+description = "A standard unit."
+icon = ExtResource("1_erp23")
+model_scene = ExtResource("2_erp23")
+footprint_size = Vector2i(2, 2)
+max_health = 100
+movement_range = 3
+defense_rating = 0
+primary_action_category = 0
+primary_action_name = "Action"
+primary_action_power = 10
+primary_action_range = 1
+primary_action_ap_cost = 1
+special_ability_ids = Array[StringName]([])
+resource_cost = {
+"gold": 50
+}
+build_time_seconds = 5.0
+supply_cost = 1
+unit_tags = Array[StringName]([])
+metadata/_custom_type_script = "uid://c6fuw45jayptp"

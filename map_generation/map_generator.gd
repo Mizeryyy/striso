@@ -13,6 +13,9 @@ const GREEDY_MESH_DIRTY_RECT_BUFFER = 2
 @export var map_data_manager_script: Script
 @export var terrain_shaper_script: Script
 
+
+
+
 # --- Cached Script Class References ---
 var AssetUtilities_C 
 var CustomTileData_C 
@@ -320,9 +323,21 @@ func generate_new_world():
 	_place_all_foliage_props() 
 	
 	print("World generation complete.")
-	var pathfinder_node = get_node_or_null("../Pathfinder")
-	if pathfinder_node and pathfinder_node.has_method("set_map_data"):
+	# --- MODIFICATION FOR SIGNAL EMISSION ---
+	# Update Pathfinder (if it needs to happen before map_fully_ready)
+	var pathfinder_node = get_node_or_null("../Pathfinder") # Adjust path if necessary
+	if is_instance_valid(pathfinder_node) and pathfinder_node.has_method("set_map_data"):
+		print_debug("MapGenerator.gd: Updating Pathfinder before emitting signal.") # DEBUG
 		pathfinder_node.set_map_data(map_data_manager.grid, Vector2i(map_width, map_depth), current_tile_dimensions)
+	else:
+		print_debug("MapGenerator.gd: Pathfinder node not found or no set_map_data method.") # DEBUG
+	
+	print_debug("MapGenerator.gd: generate_new_world() FINISHED. About to emit 'map_fully_ready'.") # DEBUG
+	
+	# Using call_deferred for signal emission is generally safer when generation is triggered from _ready()
+	call_deferred("emit_signal", "map_fully_ready")
+	print_debug("MapGenerator.gd: 'map_fully_ready' signal emission was DEFERRED.") # DEBUG
+	# --- END OF MODIFICATION ---
 
 func world_to_grid_coords_snapped(world_pos: Vector3) -> Vector2i:
 	if current_tile_dimensions.x == 0.0 or current_tile_dimensions.z == 0.0: return Vector2i(-1,-1)
@@ -704,3 +719,12 @@ func _spawn_foliage_on_tile(tile_data: CustomTileData, prop_scene: PackedScene):
 	props_node.add_child(p_inst);var max_off=current_tile_dimensions.x*0.5*major_prop_max_offset_factor 
 	p_inst.global_position=Vector3(tile_data.position.x+randf_range(-max_off,max_off),tile_data.position.y+(current_tile_dimensions.y*0.5),tile_data.position.z+randf_range(-max_off,max_off))
 	p_inst.rotation.y=randf_range(0,TAU);tile_data.has_prop=true
+func is_valid_coord(x: int, z: int) -> bool:
+	if map_data_manager: # Ensure map_data_manager is initialized
+		return map_data_manager.is_valid_coord(x, z)
+	else:
+		# Fallback or error if map_data_manager isn't ready, though it should be by the time this is called.
+		printerr("MapGenerator.is_valid_coord: map_data_manager is not initialized!")
+		# A basic bounds check based on map_width/map_depth if map_data_manager is somehow null
+		# This is a safety net, ideally map_data_manager is always valid here.
+		return x >= 0 and x < map_width and z >= 0 and z < map_depth
